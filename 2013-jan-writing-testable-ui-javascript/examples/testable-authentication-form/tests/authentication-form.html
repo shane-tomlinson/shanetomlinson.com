@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0" />
+  <link type="text/css" rel="stylesheet" href="qunit.css" />
+</head>
+<body>
+  <h1 id="qunit-header">Authentication Form Test Suite</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  <div id="qunit-test-area"></div>
+
+  <div id="qunit-fixture">
+    <input type="text" id="username" name="username"></input>
+    <input type="password" id="password" name="password"></input>
+
+    <p id="username_password_required" style="display: none;">
+      Both the username and password are required.
+    </p>
+
+    <p id="authentication_success" style="display: none;">
+      You have successfully authenticated!
+    </p>
+
+    <p id="authentication_failure" style="display: none;">
+      This username/password combination is not correct.
+    </p>
+
+    <p id="authentication_error" style="display: none;">
+      There was a problem authenticating the user, please try again later.
+    </p>
+  </div>
+
+  <script src="../jquery.min.js"></script>
+  <!-- QUnit is used for this example. Jasmine and Mocha are two other
+       popular test suites -->
+  <script src="qunit.js"></script>
+
+  <!-- Include the ajax mock so no XHR requests are actually made -->
+  <script src="ajax-mock.js"></script>
+
+  <!-- Include the module to test -->
+  <script src="../authentication-form.js"></script>
+
+  <!-- The tests -->
+  <script src="authentication-form.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+-->
+<html>
+<head>
+  <title>An Untestable Authentication Form</title>
+</head>
+<body>
+  <form id="authentication_form">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"></input>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"></input>
+    <button>Submit</button>
+
+    <p id="username_password_required" style="display: none;">
+      Both the username and password are required.
+    </p>
+
+    <p id="authentication_success" style="display: none;">
+      You have successfully authenticated!
+    </p>
+
+    <p id="authentication_failure" style="display: none;">
+      This username/password combination is not correct.
+    </p>
+
+    <p id="authentication_error" style="display: none;">
+      There was a problem authenticating the user, please try again later.
+    </p>
+  </form>
+  <script src="jquery.min.js"></script>
+  <script>
+    $(function() {
+      $("#authentication_form").on("submit", function(event) {
+        event.preventDefault();
+
+        var username = $("#username").val();
+        var password = $("#password").val();
+
+        if (username && password) {
+          $.ajax({
+            type: "POST",
+            url: "/authenticate_user",
+            data: {
+              username: username,
+              password: password
+            },
+            success: function(data, status, jqXHR) {
+              if (data.success) {
+                $("#authentication_success").show();
+              }
+              else {
+                $("#authentication_failure").show();
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              $("#authentication_error").show();
+            }
+          });
+        }
+        else {
+          $("#username_password_required").show();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

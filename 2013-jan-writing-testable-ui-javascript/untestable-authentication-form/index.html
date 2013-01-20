@@ -35,13 +35,19 @@
   <script src="jquery.min.js"></script>
   <script>
     $(function() {
+
+      // Pyramid of doom - A mixture of disparate concerns and
+      // very difficult to test individual parts
       $("#authentication_form").on("submit", function(event) {
+        // Event handler logic is mixed with form handling logic
         event.preventDefault();
 
         var username = $("#username").val();
         var password = $("#password").val();
 
         if (username && password) {
+          // Without a mock, XHR requests require a functioning
+          // back end, adding extra dependencies and delay
           $.ajax({
             type: "POST",
             url: "/authenticate_user",
@@ -50,6 +56,8 @@
               password: password
             },
             success: function(data, status, jqXHR) {
+              // Knowing when this completes requires some sort
+              // of notification
               if (data.success) {
                 $("#authentication_success").show();
               }

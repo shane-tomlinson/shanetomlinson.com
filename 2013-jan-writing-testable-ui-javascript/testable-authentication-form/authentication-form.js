@@ -5,7 +5,7 @@
  */
 
 // Use the Module pattern
-var AuthenticationForm = (function() {
+var AuthenticationForm = (function($) {
   "use strict";
 
   var Module = {
@@ -40,7 +40,9 @@ var AuthenticationForm = (function() {
   // Separate the submit handler from the actual action. This allows submitForm
   // to be called programatically without worrying about handling the event.
   function onFormSubmit(event) {
-    event.preventDefault();
+    if (!!event) {
+      event.preventDefault();
+    }
 
     submitForm.call(this);
   }
@@ -48,7 +50,9 @@ var AuthenticationForm = (function() {
   // checkAuthentication is asynchronous but the unit tests need to
   // perform their checks after all actions are complete. "done" is an optional
   // callback that is called once all other actions complete.
-  function submitForm(done) {
+  function submitForm(onComplete) {
+    onComplete = onComplete || function(){};
+    
     var username = $("#username").val();
     var password = $("#password").val();
 
@@ -56,24 +60,27 @@ var AuthenticationForm = (function() {
       checkAuthentication.call(this, username, password, function(error, user) {
         if (error) {
           $("#authentication_error").show();
-        } else {
+        } 
+        else {
           updateAuthenticationStatus(user);
         }
 
         // surface any errors so tests can be done.
-        done && done(error);
+        onComplete(error);
       });
     }
     else {
       $("#username_password_required").show();
 
       // pass back an error message that can be used for testing.
-      done && done("username_password_required");
+      onComplete("username_password_required");
     }
   }
 
   // checkAuthentication makes use of the ajax mock for unit testing.
-  function checkAuthentication(username, password, done) {
+  function checkAuthentication(username, password, onComplete) {
+    onComplete = onComplete || function(){};
+    
     this.ajax({
       type: "POST",
       url: "/authenticate_user",
@@ -89,11 +96,10 @@ var AuthenticationForm = (function() {
             userid: resp.userid
           };
         }
-
-        done && done(null, user);
+        onComplete(null, user);
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        done && done(errorThrown);
+        onComplete(errorThrown);
       }
     });
   }
@@ -106,4 +112,4 @@ var AuthenticationForm = (function() {
       $("#authentication_failure").show();
     }
   }
-}());
+}(jQuery));
